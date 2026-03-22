@@ -30,33 +30,23 @@ jobs:
           SFTP_HOST: ${{ secrets.CLOUDWAYS_HOST }}
           SFTP_USER: ${{ secrets.CLOUDWAYS_USERNAME }}
         run: |
-          pip install paramiko -q
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
-          printf '%s\n' "$SSH_PRIVATE_KEY" > /tmp/deploy_key
-          chmod 600 /tmp/deploy_key
+          # Generate sftp batch commands
+          {
+            find dist -mindepth 1 -type d | sort | while IFS= read -r d; do
+              echo "-mkdir ${d#dist/}"
+            done
+            find dist -type f | sort | while IFS= read -r f; do
+              echo "put $f ${f#dist/}"
+            done
+            echo "bye"
+          } > /tmp/sftp_batch.txt
 
-          python3 << 'PYEOF'
-          import paramiko, os
-          from pathlib import Path
-
-          def upload_dir(sftp, local, remote):
-              for item in sorted(Path(local).iterdir()):
-                  rpath = remote + '/' + item.name
-                  if item.is_dir():
-                      try: sftp.mkdir(rpath)
-                      except: pass
-                      upload_dir(sftp, item, rpath)
-                  else:
-                      print(f'  {item} -> {rpath}')
-                      sftp.put(str(item), rpath)
-
-          key = paramiko.RSAKey.from_private_key_file('/tmp/deploy_key')
-          ssh = paramiko.SSHClient()
-          ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-          ssh.connect(os.environ['SFTP_HOST'], username=os.environ['SFTP_USER'], pkey=key, timeout=30)
-          sftp = ssh.open_sftp()
-          upload_dir(sftp, 'dist', '/public_html')
-          sftp.close()
-          ssh.close()
-          print('Deploy complete!')
-          PYEOF
+          sftp -i ~/.ssh/deploy_key \
+               -o StrictHostKeyChecking=no \
+               -o LogLevel=ERROR \
+               -b /tmp/sftp_batch.txt \
+               "${SFTP_USER}@${SFTP_HOST}:/public_html"

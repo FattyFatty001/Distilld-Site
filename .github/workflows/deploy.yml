@@ -39,7 +39,7 @@ jobs:
 
           # Write lftp script - settings must come before open
           printf '%s\n' \
-            "set sftp:connect-program \"ssh -a -x -i /root/.ssh/deploy_key -o StrictHostKeyChecking=no\"" \
+            "set sftp:connect-program \"ssh -a -x -i ${HOME}/.ssh/deploy_key -o StrictHostKeyChecking=no\"" \
             "set net:timeout 30" \
             "set net:max-retries 3" \
             "open sftp://${CLOUDWAYS_USERNAME}@${CLOUDWAYS_HOST}" \

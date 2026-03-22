@@ -34,6 +34,7 @@ jobs:
 
           # Generate sftp batch commands
           {
+            echo "-rm index.php"
             find dist -mindepth 1 -type d | sort | while IFS= read -r d; do
               echo "-mkdir ${d#dist/}"
             done

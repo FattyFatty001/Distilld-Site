@@ -37,5 +37,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$CLOUDWAYS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-          lftp -e "set sftp:connect-program 'ssh -a -x -i /root/.ssh/deploy_key -o StrictHostKeyChecking=no'; set net:timeout 30; set net:max-retries 3; mirror -R --parallel=4 ./dist/ /public_html/; quit" \
-            "sftp://${CLOUDWAYS_USERNAME}@${CLOUDWAYS_HOST}"
+          # Write lftp script - settings must come before open
+          printf '%s\n' \
+            "set sftp:connect-program \"ssh -a -x -i /root/.ssh/deploy_key -o StrictHostKeyChecking=no\"" \
+            "set net:timeout 30" \
+            "set net:max-retries 3" \
+            "open sftp://${CLOUDWAYS_USERNAME}@${CLOUDWAYS_HOST}" \
+            "mirror -R --parallel=4 ./dist/ /public_html/" \
+            "quit" > /tmp/deploy.lftp
+
+          lftp -f /tmp/deploy.lftp

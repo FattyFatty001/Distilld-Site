@@ -3,37 +3,41 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
-  <main class="min-h-screen pt-24 pb-12 pl-6 pr-8 flex flex-col items-start justify-center max-w-[704px]">
+  <main class="min-h-screen pt-24 pb-12 flex flex-col justify-center">
+    <div class="w-full max-w-7xl mx-auto px-6">
+      <div class="max-w-lg">
 
-    <div class="w-full mb-16">
-      <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-4">
-        Canadian Law, Monitored & <span class="text-on-primary-container">Distilld.</span>
-      </h1>
-      <p class="text-slate-500 text-lg">
-        Helping businesses stay ahead of Canadian regulatory changes.
-      </p>
+        <div class="mb-16">
+          <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-4">
+            Canadian Law, Monitored & <span class="text-on-primary-container">Distilld.</span>
+          </h1>
+          <p class="text-slate-500 text-lg">
+            Helping businesses stay ahead of Canadian regulatory changes.
+          </p>
+        </div>
+
+        <p class="mb-20 text-slate-600 text-base leading-relaxed">
+          We're starting close to home — Distilld is being built for Canadian businesses, we're looking for a small and deliberate group of early users who can help shape what it becomes.
+        </p>
+
+        <form action="#" class="w-full space-y-3" method="POST">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="email">Email</label>
+            <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="email" name="email" placeholder="name@firm.ca" type="email" required/>
+          </div>
+          <button class="w-full primary-gradient text-white font-headline font-bold py-4 rounded-full text-lg shadow-lg active:scale-95 transition-transform" type="submit">
+            Join the Beta
+          </button>
+          <div class="pt-2 flex items-center gap-2 text-slate-500">
+            <span class="material-symbols-outlined text-blue-900" style="font-variation-settings: 'FILL' 1;">eco</span>
+            <span class="text-sm font-medium">Tailored for the Canadian Legal Landscape</span>
+          </div>
+        </form>
+
+      </div>
     </div>
-
-    <p class="w-full mb-20 text-slate-600 text-base leading-relaxed">
-      We're starting close to home — Distilld is being built for Canadian businesses, we're looking for a small and deliberate group of early users who can help shape what it becomes.
-    </p>
-
-    <form action="#" class="w-full space-y-3" method="POST">
-      <div>
-        <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="email">Email</label>
-        <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="email" name="email" placeholder="name@firm.ca" type="email" required/>
-      </div>
-      <button class="w-full primary-gradient text-white font-headline font-bold py-4 rounded-full text-lg shadow-lg active:scale-95 transition-transform" type="submit">
-        Join the Beta
-      </button>
-      <div class="pt-2 flex items-center gap-2 text-slate-500">
-        <span class="material-symbols-outlined text-blue-900" style="font-variation-settings: 'FILL' 1;">eco</span>
-        <span class="text-sm font-medium">Tailored for the Canadian Legal Landscape</span>
-      </div>
-    </form>
-
-    <div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl -z-10"></div>
-    <div class="fixed bottom-1/4 -right-20 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl -z-10"></div>
-
   </main>
+
+  <div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl -z-10"></div>
+  <div class="fixed bottom-1/4 -right-20 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl -z-10"></div>
 </Layout>

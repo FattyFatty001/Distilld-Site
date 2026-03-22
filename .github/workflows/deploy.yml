@@ -26,13 +26,11 @@ jobs:
 
       - name: Deploy to Cloudways via SFTP
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
           SFTP_HOST: ${{ secrets.CLOUDWAYS_HOST }}
           SFTP_USER: ${{ secrets.CLOUDWAYS_USERNAME }}
+          SFTP_PASS: ${{ secrets.CLOUDWAYS_PASSWORD }}
         run: |
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          sudo apt-get install -y sshpass -q
 
           # Generate sftp batch commands
           {
@@ -45,8 +43,8 @@ jobs:
             echo "bye"
           } > /tmp/sftp_batch.txt
 
-          sftp -i ~/.ssh/deploy_key \
-               -o StrictHostKeyChecking=no \
-               -o LogLevel=ERROR \
-               -b /tmp/sftp_batch.txt \
-               "${SFTP_USER}@${SFTP_HOST}:/public_html"
+          sshpass -p "$SFTP_PASS" sftp \
+            -o StrictHostKeyChecking=no \
+            -o LogLevel=ERROR \
+            -b /tmp/sftp_batch.txt \
+            "${SFTP_USER}@${SFTP_HOST}:/public_html"

@@ -1,1 +1,7 @@
 DirectoryIndex index.html index.htm
+
+# Tell Varnish/proxies not to cache HTML pages
+<FilesMatch "\.html$">
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+</FilesMatch>

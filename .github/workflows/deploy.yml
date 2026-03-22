@@ -25,12 +25,12 @@ jobs:
         run: npm run build
 
       - name: Deploy to Cloudways via SFTP
-        uses: easingthemes/ssh-deploy@main
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
-          ARGS: "-avzr --delete"
-          SOURCE: "dist/"
-          REMOTE_HOST: ${{ secrets.CLOUDWAYS_HOST }}
-          REMOTE_USER: ${{ secrets.CLOUDWAYS_USERNAME }}
-          TARGET: ${{ secrets.CLOUDWAYS_REMOTE_PATH }}
-          EXCLUDE: "/dist/, /node_modules/"
+          server: ${{ secrets.CLOUDWAYS_HOST }}
+          username: ${{ secrets.CLOUDWAYS_USERNAME }}
+          ssh_private_key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+          local_path: './dist/*'
+          remote_path: '/public_html'
+          delete_remote_files: true
+          sftpArgs: '-o ConnectTimeout=10'

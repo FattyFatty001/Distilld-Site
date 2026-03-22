@@ -27,19 +27,36 @@ jobs:
       - name: Deploy to Cloudways via SFTP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
-          CLOUDWAYS_HOST: ${{ secrets.CLOUDWAYS_HOST }}
-          CLOUDWAYS_USERNAME: ${{ secrets.CLOUDWAYS_USERNAME }}
+          SFTP_HOST: ${{ secrets.CLOUDWAYS_HOST }}
+          SFTP_USER: ${{ secrets.CLOUDWAYS_USERNAME }}
         run: |
-          sudo apt-get install -y lftp -q
+          pip install paramiko -q
 
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$CLOUDWAYS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf '%s\n' "$SSH_PRIVATE_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
 
-          # Load key into SSH agent so lftp's built-in SSH picks it up
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/deploy_key
+          python3 << 'PYEOF'
+          import paramiko, os
+          from pathlib import Path
 
-          lftp -e "set net:timeout 30; set net:max-retries 3; mirror -R --parallel=4 ./dist/ /public_html/; quit" \
-            "sftp://${CLOUDWAYS_USERNAME}@${CLOUDWAYS_HOST}"
+          def upload_dir(sftp, local, remote):
+              for item in sorted(Path(local).iterdir()):
+                  rpath = remote + '/' + item.name
+                  if item.is_dir():
+                      try: sftp.mkdir(rpath)
+                      except: pass
+                      upload_dir(sftp, item, rpath)
+                  else:
+                      print(f'  {item} -> {rpath}')
+                      sftp.put(str(item), rpath)
+
+          key = paramiko.RSAKey.from_private_key_file('/tmp/deploy_key')
+          ssh = paramiko.SSHClient()
+          ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+          ssh.connect(os.environ['SFTP_HOST'], username=os.environ['SFTP_USER'], pkey=key, timeout=30)
+          sftp = ssh.open_sftp()
+          upload_dir(sftp, 'dist', '/public_html')
+          sftp.close()
+          ssh.close()
+          print('Deploy complete!')
+          PYEOF

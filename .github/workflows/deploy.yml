@@ -45,12 +45,15 @@ jobs:
 
           # Strip any accidental whitespace from the password secret
           CLEAN_PASS=$(printf '%s' "$SFTP_PASS" | tr -d '\n\r ')
+          echo "Password length after clean: ${#CLEAN_PASS}"
 
-          sshpass -p "$CLEAN_PASS" sftp \
+          # Use SSHPASS env var to avoid shell quoting issues with special chars
+          export SSHPASS="$CLEAN_PASS"
+
+          sshpass -e sftp -v \
             -o StrictHostKeyChecking=no \
             -o PreferredAuthentications=password \
             -o PasswordAuthentication=yes \
             -o PubkeyAuthentication=no \
-            -o LogLevel=ERROR \
             -b /tmp/sftp_batch.txt \
             "${SFTP_USER}@${SFTP_HOST}:/public_html"

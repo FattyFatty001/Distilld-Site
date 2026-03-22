@@ -25,12 +25,23 @@ jobs:
         run: npm run build
 
       - name: Deploy to Cloudways via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.CLOUDWAYS_HOST }}
-          username: ${{ secrets.CLOUDWAYS_USERNAME }}
-          ssh_private_key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
-          local_path: './dist/*'
-          remote_path: '/public_html'
-          sftp_only: true
-          sftpArgs: '-o ConnectTimeout=10'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+          CLOUDWAYS_HOST: ${{ secrets.CLOUDWAYS_HOST }}
+          CLOUDWAYS_USERNAME: ${{ secrets.CLOUDWAYS_USERNAME }}
+        run: |
+          sudo apt-get install -y lftp -q
+
+          mkdir -p ~/.ssh ~/.lftp
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$CLOUDWAYS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          cat > ~/.lftp/rc << 'LFTP_EOF'
+          set sftp:connect-program "ssh -a -x -i /root/.ssh/deploy_key"
+          set net:timeout 30
+          set net:max-retries 3
+          LFTP_EOF
+
+          lftp -e "mirror -R --parallel=4 ./dist/ /public_html/; quit" \
+            "sftp://${CLOUDWAYS_USERNAME}@${CLOUDWAYS_HOST}"

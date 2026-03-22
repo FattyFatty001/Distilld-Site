@@ -51,6 +51,7 @@ jobs:
           export SSHPASS="$CLEAN_PASS"
 
           sshpass -e sftp -v \
+            -o BatchMode=no \
             -o StrictHostKeyChecking=no \
             -o PreferredAuthentications=password \
             -o PasswordAuthentication=yes \

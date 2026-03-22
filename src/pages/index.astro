@@ -1,123 +1,10 @@
 ---
-// Beta signup page — standalone (no Layout import)
-// TODO: Wire up form action to a form service (e.g., Formspree) when ready
+import Layout from '../layouts/Layout.astro';
 ---
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Join Distilld Beta</title>
-  <meta name="description" content="Distilld — Regulatory alerts for Canadian businesses." />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" href="/favicon.ico" />
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <!-- Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "surface-tint": "#405f91",
-            "error-container": "#ffdad6",
-            "tertiary-container": "#4f1c02",
-            "primary-container": "#002b5b",
-            "surface-dim": "#d9dadb",
-            "on-error": "#ffffff",
-            "inverse-primary": "#a9c7ff",
-            "on-secondary-container": "#4d607e",
-            "primary-fixed": "#d6e3ff",
-            "on-surface": "#191c1d",
-            "on-secondary-fixed-variant": "#344765",
-            "background": "#f8f9fa",
-            "on-tertiary-fixed": "#360f00",
-            "surface-container-lowest": "#ffffff",
-            "secondary-fixed": "#d5e3ff",
-            "tertiary-fixed": "#ffdbcd",
-            "surface-container-highest": "#e1e3e4",
-            "secondary": "#4c5f7d",
-            "inverse-on-surface": "#f0f1f2",
-            "on-secondary": "#ffffff",
-            "surface-bright": "#f8f9fa",
-            "inverse-surface": "#2e3132",
-            "outline-variant": "#c4c6d0",
-            "on-primary-fixed-variant": "#264778",
-            "surface": "#f8f9fa",
-            "secondary-container": "#c7dbff",
-            "on-tertiary-container": "#cd805d",
-            "primary-fixed-dim": "#a9c7ff",
-            "on-primary-container": "#7594ca",
-            "surface-variant": "#e1e3e4",
-            "on-secondary-fixed": "#051c37",
-            "on-primary": "#ffffff",
-            "surface-container": "#edeeef",
-            "primary": "#001736",
-            "on-surface-variant": "#43474f",
-            "surface-container-high": "#e7e8e9",
-            "tertiary-fixed-dim": "#ffb596",
-            "on-tertiary-fixed-variant": "#713619",
-            "surface-container-low": "#f3f4f5",
-            "secondary-fixed-dim": "#b4c7ea",
-            "on-primary-fixed": "#001b3d",
-            "tertiary": "#2f0c00",
-            "outline": "#747780",
-            "error": "#ba1a1a",
-            "on-background": "#191c1d",
-            "on-error-container": "#93000a",
-            "on-tertiary": "#ffffff"
-          },
-          fontFamily: {
-            "headline": ["Manrope"],
-            "body": ["Inter"],
-            "label": ["Inter"]
-          },
-          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-        },
-      },
-    }
-  </script>
-  <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      display: inline-block;
-      line-height: 1;
-    }
-    .bg-glass {
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    .primary-gradient {
-      background: linear-gradient(135deg, #001736 0%, #002b5b 100%);
-    }
-    .ios-shadow {
-      box-shadow: 0 12px 32px rgba(0, 23, 54, 0.06);
-    }
-  </style>
-</head>
-<body class="bg-surface font-body text-on-surface antialiased">
-  <!-- TopNavBar -->
-  <nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
-    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-      <div class="text-2xl font-black text-blue-900 dark:text-blue-100 tracking-tighter font-headline">Distilld</div>
-      <div class="flex items-center gap-6">
-        <div class="hidden md:flex gap-8 font-manrope text-sm font-medium tracking-tight">
-          <span class="text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg">App</span>
-          <span class="text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg">Documentation</span>
-        </div>
-        <button class="p-2 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors">
-          <span class="material-symbols-outlined text-blue-900 dark:text-blue-100">public</span>
-        </button>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Main Content Canvas -->
+<Layout>
   <main class="min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center">
-    <!-- Editorial Header Section -->
+
     <div class="w-full max-w-xl text-center mb-12">
       <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-4">
         Normative Intelligence. <span class="text-on-primary-container">Distilld.</span>
@@ -127,57 +14,24 @@
       </p>
     </div>
 
-    <!-- Central Minimalist Sign-up Form -->
     <div class="w-full max-w-md bg-surface-container-lowest p-8 md:p-10 rounded-xl ios-shadow">
-      {/* TODO: Set action to a form service endpoint (e.g., https://formspree.io/f/YOUR_ID) */}
       <form action="#" class="space-y-8" method="POST">
-        <div class="space-y-6">
-          <!-- Full Name -->
-          <div class="group">
-            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="full_name">Full Name</label>
-            <input class="w-full bg-surface-container-highest border-none rounded-lg py-4 px-4 text-primary font-medium focus:ring-0 focus:border-b-2 focus:border-primary transition-all placeholder:text-outline/50" id="full_name" name="full_name" placeholder="E.g. Alexander Sterling" type="text"/>
-          </div>
-          <!-- Professional Email -->
-          <div class="group">
-            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="email">Professional Email</label>
-            <input class="w-full bg-surface-container-highest border-none rounded-lg py-4 px-4 text-primary font-medium focus:ring-0 focus:border-b-2 focus:border-primary transition-all placeholder:text-outline/50" id="email" name="email" placeholder="name@firm.ca" type="email"/>
-          </div>
-          <!-- Organization -->
-          <div class="group">
-            <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="organization">Organization</label>
-            <input class="w-full bg-surface-container-highest border-none rounded-lg py-4 px-4 text-primary font-medium focus:ring-0 focus:border-b-2 focus:border-primary transition-all placeholder:text-outline/50" id="organization" name="organization" placeholder="Law Firm or Agency" type="text"/>
-          </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="email">Email</label>
+          <input class="w-full bg-surface-container-highest border-none rounded-lg py-4 px-4 text-primary font-medium focus:ring-0 focus:border-b-2 focus:border-primary transition-all placeholder:text-outline/50" id="email" name="email" placeholder="name@firm.ca" type="email" required/>
         </div>
-        <!-- Primary CTA Button -->
         <button class="w-full primary-gradient text-on-primary font-headline font-bold py-4 rounded-full text-lg shadow-lg active:scale-95 transition-transform" type="submit">
           Join the Beta
         </button>
       </form>
-      <!-- Bottom Note -->
       <div class="mt-10 flex items-center justify-center gap-2 text-on-surface-variant">
         <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">eco</span>
         <span class="text-sm font-medium">Tailored for the Canadian Legal Landscape</span>
       </div>
     </div>
 
-    <!-- Asymmetric Background Elements (Decorative) -->
     <div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl -z-10"></div>
     <div class="fixed bottom-1/4 -right-20 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl -z-10"></div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="w-full py-12 border-t border-slate-200/20 dark:border-slate-800/20 bg-slate-50 dark:bg-slate-950">
-    <div class="flex flex-col md:flex-row justify-between items-center px-8 gap-4 max-w-7xl mx-auto">
-      <div class="text-lg font-bold text-blue-900 dark:text-blue-50 font-headline">Distilld</div>
-      <div class="flex flex-wrap justify-center gap-8 font-inter text-xs text-slate-500 dark:text-slate-400">
-        <span class="opacity-80">Terms of Service</span>
-        <span class="opacity-80">Privacy Policy</span>
-        <span class="opacity-80">Contact</span>
-      </div>
-      <div class="font-inter text-xs text-slate-500 dark:text-slate-400">
-        © 2024 Distilld. Built for the Canadian Jurist.
-      </div>
-    </div>
-  </footer>
-</body>
-</html>
+  </main>
+</Layout>

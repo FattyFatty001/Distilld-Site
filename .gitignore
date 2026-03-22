@@ -20,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# SSH keys - never commit these
+distilld_deploy*
+
 # jetbrains setting folder
 .idea/

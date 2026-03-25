@@ -48,15 +48,19 @@ import Layout from '../layouts/Layout.astro';
           <input type="text" name="website" value="" style="position:absolute;left:-9999px;opacity:0;height:0;" tabindex="-1" autocomplete="off" />
         </form>
 
+        <!-- Hidden iframe: Brevo's response loads here instead of navigating the page -->
+        <iframe name="brevo-target" id="brevo-target" style="display:none;" title=""></iframe>
+
         <script>
           const form = document.getElementById('signup-form') as HTMLFormElement;
           const btn = document.getElementById('signup-btn') as HTMLButtonElement;
           const feedback = document.getElementById('signup-feedback') as HTMLDivElement;
+          const iframe = document.getElementById('brevo-target') as HTMLIFrameElement;
 
           // Record when the page loaded for the time check
           form.dataset.loadedAt = Date.now().toString();
 
-          form.addEventListener('submit', async (e) => {
+          form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             // Honeypot: if filled, silently fake success
@@ -77,24 +81,16 @@ import Layout from '../layouts/Layout.astro';
             btn.textContent = 'Joining…';
             feedback.className = 'hidden';
 
-            try {
-              const res = await fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-              });
+            // Submit into the hidden iframe — no CORS, no page redirect
+            iframe.onload = () => {
+              showSuccess();
+              form.reset();
+              iframe.onload = null;
+            };
 
-              if (res.ok) {
-                showSuccess();
-                form.reset();
-              } else {
-                throw new Error();
-              }
-            } catch {
-              feedback.textContent = 'Something went wrong. Please try again.';
-              feedback.className = 'pt-1 text-sm font-medium text-center rounded-lg py-2 text-red-700 bg-red-50';
-              btn.disabled = false;
-              btn.textContent = 'Join the Beta';
-            }
+            form.target = 'brevo-target';
+            form.submit();
+            form.target = '';
           });
 
           function showSuccess() {

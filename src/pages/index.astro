@@ -21,20 +21,28 @@ import Layout from '../layouts/Layout.astro';
           We're starting close to home. Distilld is being built for Canadian businesses and we're looking for early users who can help shape what it becomes.
         </p>
 
+        <!-- Success/error messages — shown by Brevo's script, styled to match our design -->
+        <div id="success-message" style="display:none;" class="mb-3 text-sm font-medium text-center rounded-lg py-2 px-3 text-green-700 bg-green-50">
+          You're on the list! We'll be in touch.
+        </div>
+        <div id="error-message" style="display:none;" class="mb-3 text-sm font-medium text-center rounded-lg py-2 px-3 text-red-700 bg-red-50">
+          Something went wrong. Please try again.
+        </div>
+
         <form
-          id="signup-form"
+          id="sib-form"
           action="https://58642e8d.sibforms.com/serve/MUIFAD0DU6EwvKO90roWquyc652EGh6hd2zZNHpClXoABqO2MpP7Z69posBzx-Zg-9JimEoxuB5RLzOafkJmusZ1BGrYAdlxWEDCmP9EhPkMlyayJVgFPwaQG87-_tXqUQPzGTXiC_Ppna_VTW7JD9iVZvv14yOgIKfij4n8ZaCnnHwUP4_IQXF6oH_Ux53AMbce4BDaVg-_tdCQSg=="
           method="POST"
+          data-type="subscription"
           class="w-full space-y-3"
         >
           <div>
             <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="EMAIL">Email</label>
-            <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="EMAIL" name="EMAIL" placeholder="name@firm.ca" type="email" autocomplete="off" required/>
+            <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="EMAIL" name="EMAIL" placeholder="name@firm.ca" type="text" autocomplete="off" data-required="true" required />
           </div>
           <button id="signup-btn" class="w-full primary-gradient text-white font-headline font-bold py-4 rounded-full text-lg shadow-lg active:scale-95 transition-transform" type="submit">
             Join the Beta
           </button>
-          <div id="signup-feedback" class="hidden pt-1 text-sm font-medium text-center rounded-lg py-2"></div>
           <div class="pt-2 flex items-center gap-2 text-slate-500">
             <span class="material-symbols-outlined text-blue-900" style="font-variation-settings: 'FILL' 1;">eco</span>
             <span class="text-sm font-medium">Tailored for the Canadian Legal Landscape</span>
@@ -48,57 +56,61 @@ import Layout from '../layouts/Layout.astro';
           <input type="text" name="website" value="" style="position:absolute;left:-9999px;opacity:0;height:0;" tabindex="-1" autocomplete="off" />
         </form>
 
-        <!-- Hidden iframe: Brevo's response loads here instead of navigating the page -->
-        <iframe name="brevo-target" id="brevo-target" style="display:none;" title=""></iframe>
-
         <script>
-          const form = document.getElementById('signup-form') as HTMLFormElement;
+          const form = document.getElementById('sib-form') as HTMLFormElement;
           const btn = document.getElementById('signup-btn') as HTMLButtonElement;
-          const feedback = document.getElementById('signup-feedback') as HTMLDivElement;
-          const iframe = document.getElementById('brevo-target') as HTMLIFrameElement;
 
-          // Record when the page loaded for the time check
+          // Record page load time for the time check
           form.dataset.loadedAt = Date.now().toString();
 
-          form.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            // Honeypot: if filled, silently fake success
+          // Capture phase = runs BEFORE Brevo's handler
+          form.addEventListener('submit', function(e) {
+            // Honeypot check
             const honeypot = form.querySelector<HTMLInputElement>('[name="website"]');
             if (honeypot?.value) {
-              showSuccess();
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              (document.getElementById('success-message') as HTMLElement).style.display = 'block';
+              btn.textContent = 'Joined!';
               return;
             }
 
-            // Time check: bots submit instantly, humans take a few seconds
+            // Time check: bots submit in under 3 seconds
             const loadedAt = parseInt(form.dataset.loadedAt ?? '0');
             if (Date.now() - loadedAt < 3000) {
-              showSuccess();
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              (document.getElementById('success-message') as HTMLElement).style.display = 'block';
+              btn.textContent = 'Joined!';
               return;
             }
 
+            // Passes checks — Brevo's script takes over from here
             btn.disabled = true;
             btn.textContent = 'Joining…';
-            feedback.className = 'hidden';
-
-            // Submit into the hidden iframe — no CORS, no page redirect
-            iframe.onload = () => {
-              showSuccess();
-              form.reset();
-              iframe.onload = null;
-            };
-
-            form.target = 'brevo-target';
-            form.submit();
-            form.target = '';
-          });
-
-          function showSuccess() {
-            feedback.textContent = "You're on the list! We'll be in touch.";
-            feedback.className = 'pt-1 text-sm font-medium text-center rounded-lg py-2 text-green-700 bg-green-50';
-            btn.textContent = 'Joined!';
-          }
+          }, true); // true = capture phase
         </script>
+
+        <!-- Required by Brevo's main.js -->
+        <script is:inline>
+          window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+          window.LOCALE = 'en';
+          window.EMAIL_INVALID_MESSAGE = 'Please enter a valid email address.';
+          window.REQUIRED_ERROR_MESSAGE = 'This field cannot be left blank.';
+          window.GENERIC_INVALID_MESSAGE = 'The information provided is invalid. Please review the field format and try again.';
+          window.translation = {
+            common: {
+              selectedList: '{quantity} list selected',
+              selectedLists: '{quantity} lists selected',
+              selectedOption: '{quantity} selected',
+              selectedOptions: '{quantity} selected',
+            }
+          };
+          var AUTOHIDE = Boolean(1);
+        </script>
+
+        <!-- Brevo's script handles the actual AJAX submission to their servers -->
+        <script is:inline defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 
       </div>
     </div>

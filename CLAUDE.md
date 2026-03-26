@@ -80,7 +80,9 @@ Placeholder page ("Coming soon").
 
 Emails are collected via **Brevo's subscription form** (single opt-in — contacts appear in the list immediately on submit).
 
-The form uses a **hidden `<iframe name="brevo-target">` as the form target**. On submit, the browser POSTs directly to Brevo's sibforms.com endpoint inside the iframe — the page never navigates away and there are no CORS issues (native HTML POST, not AJAX). After 1.2 seconds, we show our own success message. Brevo's `main.js` is intentionally **not used** — it only works reliably on forms hosted on Brevo's own pages.
+The form uses `fetch()` to POST to Brevo's `?isAjax=1` endpoint. Brevo's `main.js` is intentionally **not used** — it only works reliably on forms hosted on Brevo's own pages.
+
+**Key discovery**: Brevo silently ignores native form POSTs to the base action URL. The real submission endpoint is `[action]?isAjax=1`, which returns `{"success":true}` on success. Brevo mirrors the request's `Origin` in the `access-control-allow-origin` response header, so `fetch()` from any domain works without CORS issues.
 
 ### Form IDs / field names required by Brevo
 
@@ -99,13 +101,13 @@ The form uses a **hidden `<iframe name="brevo-target">` as the form target**. On
 
 ### No Brevo JS needed
 
-Brevo's `main.js` is not loaded. The hidden iframe approach uses a native HTML POST, so no client-side scripts from Brevo are required.
+Brevo's `main.js` is not loaded. Our own `fetch()` call to `[action]?isAjax=1` handles submission, and we read the JSON response to show the correct success or error state.
 
 ---
 
 ## Anti-Spam
 
-No CAPTCHA. Two invisible measures applied via a **capture-phase** event listener (runs before Brevo's handler):
+No CAPTCHA. Two invisible measures applied before the `fetch()` call:
 
 ### 1. Honeypot field
 ```html

@@ -21,19 +21,18 @@ import Layout from '../layouts/Layout.astro';
           We're starting close to home. Distilld is being built for Canadian businesses and we're looking for early users who can help shape what it becomes.
         </p>
 
-        <!-- Success message — shown after submission -->
+        <!-- Success/error messages -->
         <div id="success-message" style="display:none;" class="mb-3 text-sm font-medium text-center rounded-lg py-2 px-3 text-green-700 bg-green-50">
           You're on the list! We'll be in touch.
         </div>
-
-        <!-- Hidden iframe: form posts here so the page never navigates away -->
-        <iframe name="brevo-target" style="display:none;" aria-hidden="true"></iframe>
+        <div id="error-message" style="display:none;" class="mb-3 text-sm font-medium text-center rounded-lg py-2 px-3 text-red-700 bg-red-50">
+          Something went wrong. Please try again.
+        </div>
 
         <form
           id="sib-form"
           action="https://58642e8d.sibforms.com/serve/MUIFAD0DU6EwvKO90roWquyc652EGh6hd2zZNHpClXoABqO2MpP7Z69posBzx-Zg-9JimEoxuB5RLzOafkJmusZ1BGrYAdlxWEDCmP9EhPkMlyayJVgFPwaQG87-_tXqUQPzGTXiC_Ppna_VTW7JD9iVZvv14yOgIKfij4n8ZaCnnHwUP4_IQXF6oH_Ux53AMbce4BDaVg-_tdCQSg=="
           method="POST"
-          target="brevo-target"
           class="w-full space-y-3"
         >
           <div>
@@ -60,15 +59,16 @@ import Layout from '../layouts/Layout.astro';
           const form = document.getElementById('sib-form') as HTMLFormElement;
           const btn = document.getElementById('signup-btn') as HTMLButtonElement;
           const successMsg = document.getElementById('success-message') as HTMLElement;
+          const errorMsg = document.getElementById('error-message') as HTMLElement;
 
-          // Record page load time for the time check
           form.dataset.loadedAt = Date.now().toString();
 
-          form.addEventListener('submit', function(e) {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             // Honeypot check
             const honeypot = form.querySelector<HTMLInputElement>('[name="website"]');
             if (honeypot?.value) {
-              e.preventDefault();
               successMsg.style.display = 'block';
               btn.textContent = 'Joined!';
               return;
@@ -77,19 +77,43 @@ import Layout from '../layouts/Layout.astro';
             // Time check: bots submit in under 3 seconds
             const loadedAt = parseInt(form.dataset.loadedAt ?? '0');
             if (Date.now() - loadedAt < 3000) {
-              e.preventDefault();
               successMsg.style.display = 'block';
               btn.textContent = 'Joined!';
               return;
             }
 
-            // Real human — POST goes to hidden iframe (no page navigation, no CORS)
             btn.disabled = true;
             btn.textContent = 'Joining…';
-            setTimeout(() => {
-              successMsg.style.display = 'block';
-              btn.textContent = 'Joined!';
-            }, 1200);
+
+            try {
+              const body = new URLSearchParams({
+                EMAIL: (form.querySelector<HTMLInputElement>('#EMAIL')!).value,
+                email_address_check: '',
+                locale: 'en',
+              });
+
+              // Brevo's AJAX endpoint — appending ?isAjax=1 activates JSON response mode
+              const res = await fetch(form.action + '?isAjax=1', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString(),
+              });
+
+              const json = await res.json();
+
+              if (json.success) {
+                successMsg.style.display = 'block';
+                btn.textContent = 'Joined!';
+              } else {
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Join the Beta';
+              }
+            } catch {
+              errorMsg.style.display = 'block';
+              btn.disabled = false;
+              btn.textContent = 'Join the Beta';
+            }
           });
         </script>
 

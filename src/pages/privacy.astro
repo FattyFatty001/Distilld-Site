@@ -3,8 +3,90 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Privacy Policy">
-  <main class="min-h-screen pt-32 pb-20 px-6 max-w-3xl mx-auto">
-    <h1 class="font-headline text-4xl font-extrabold tracking-tighter text-primary mb-6">Privacy Policy</h1>
-    <p class="text-on-surface-variant">Coming soon.</p>
+  <main class="min-h-screen pt-32 pb-20 px-6 max-w-3xl mx-auto prose prose-slate">
+    <h1 class="font-headline text-4xl font-extrabold tracking-tighter text-primary mb-2">Privacy Policy</h1>
+    <p class="text-on-surface-variant text-sm mb-10">Last updated April 15, 2026</p>
+
+    <p class="text-on-surface-variant leading-relaxed mb-8">
+      Distilld is built on a simple principle: <strong>zero personal data</strong>. We don't ask for your name, email address, or phone number. We don't have accounts. We don't have passwords. This policy explains what little data does touch our systems and why.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">1. What We Collect</h2>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">1.1. Anonymous Device Identifier</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      When you first open Distilld, your device generates a random UUID (a string like <code>550e8400-e29b-41d4-a716-446655440000</code>). This identifier is stored locally on your device and is never linked to your name, email, Apple ID, or any other personally identifiable information. It exists solely so our notification system can deliver the right alerts to the right device.
+    </p>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">1.2. Notification Preferences</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      You choose which locations and industries you want alerts for (e.g., "Burnaby" + "Liquor"). These preferences are stored locally on your device and synced as anonymous tags with OneSignal, our push notification provider. OneSignal receives only the anonymous device ID and your topic preferences — never your identity.
+    </p>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">1.3. Usage Analytics</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      We track basic app usage — which articles you view, when sessions start and end, and UI preferences like your chosen theme. This data is sent to Supabase (our analytics database, hosted in Canada) and is tied only to your anonymous device ID. We use it to understand which features matter most and to improve the app. There is no way for us to connect this data to a real person.
+    </p>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">1.4. App Preferences</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Your theme selection, font size, calendar choice, and muted sources are stored locally on your device using AsyncStorage. This data never leaves your device.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">2. What We Don't Collect</h2>
+    <ul class="list-disc pl-6 text-on-surface-variant leading-relaxed space-y-2 mb-8">
+      <li>Your name</li>
+      <li>Your email address</li>
+      <li>Your phone number</li>
+      <li>Your physical address</li>
+      <li>Your Apple ID or Google account</li>
+      <li>Your location (GPS data)</li>
+      <li>Your contacts</li>
+      <li>Your photos or media</li>
+      <li>Any form of payment information</li>
+    </ul>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">3. Third-Party Services</h2>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">3.1. OneSignal (Push Notifications)</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      We use OneSignal to deliver push notifications. OneSignal receives your anonymous device ID and your location/industry preference tags. OneSignal's privacy policy is available at <a href="https://onesignal.com/privacy" class="text-primary underline">onesignal.com/privacy</a>.
+    </p>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">3.2. Supabase (Analytics)</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      We use Supabase to store anonymized usage events. Data is hosted in Supabase's Canadian region. Supabase's privacy policy is available at <a href="https://supabase.com/privacy" class="text-primary underline">supabase.com/privacy</a>.
+    </p>
+
+    <h3 class="font-headline text-lg font-semibold text-on-surface mt-6 mb-2">3.3. GitHub (Article Content)</h3>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Article content is fetched from a public GitHub repository. No device or user data is transmitted to GitHub as part of these requests.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">4. Data Retention & Deletion</h2>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Analytics events are retained for as long as they are useful for improving the app. Because we have no way to connect an anonymous device ID to a real person, we cannot fulfill individual data deletion requests — there is simply no personal data to delete. You can reset your anonymous ID at any time by reinstalling the app.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">5. Your Rights</h2>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Under Canadian privacy law (PIPEDA) and BC's Personal Information Protection Act, you have the right to know what personal information an organization holds about you. Since Distilld collects no personal information, there is nothing to disclose. If you have concerns, you can contact us at the address below.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">6. Children</h2>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Distilld is not directed at children under 13. We do not knowingly collect data from anyone under 13.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">7. Changes to This Policy</h2>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      If this policy changes, we'll update this page and note the change in the app. Because we don't have your contact information, this page is the canonical source.
+    </p>
+
+    <h2 class="font-headline text-2xl font-bold tracking-tighter text-primary mt-10 mb-3">8. Contact</h2>
+    <p class="text-on-surface-variant leading-relaxed mb-4">
+      Questions about this policy? Reach us at <a href="mailto:support@distilld.ca" class="text-primary underline">support@distilld.ca</a>.
+    </p>
+
   </main>
 </Layout>

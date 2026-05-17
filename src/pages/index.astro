@@ -10,15 +10,15 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="mb-16">
           <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-4">
-            Canadian Law, Monitored & <span class="text-on-primary-container">Distilld.</span>
+            Your local government, <span class="text-on-primary-container">in plain English.</span>
           </h1>
           <p class="text-slate-500 text-lg">
-            Helping businesses stay ahead of Canadian regulatory changes.
+            Council meetings. Bylaw changes. Regulatory updates. We read them so you don't have to.
           </p>
         </div>
 
         <p class="mb-20 text-slate-600 text-lg leading-relaxed">
-          We're starting close to home. Distilld is being built for Canadian businesses and we're looking for early users who can help shape what it becomes.
+          Local government affects your business, your neighbourhood, your daily life — but staying informed shouldn't require a law degree. Distilld watches the meetings, the bulletins, and the fine print, then delivers what matters in language you can actually use.
         </p>
 
         <!-- Success/error messages -->
@@ -37,14 +37,14 @@ import Layout from '../layouts/Layout.astro';
         >
           <div>
             <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="EMAIL">Email</label>
-            <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="EMAIL" name="EMAIL" placeholder="name@firm.ca" type="email" autocomplete="email" required />
+            <input class="w-full bg-white border-none rounded-xl py-4 px-4 text-blue-900 font-medium focus:ring-0 ios-shadow transition-all placeholder:text-slate-400" id="EMAIL" name="EMAIL" placeholder="you@email.ca" type="email" autocomplete="email" required />
           </div>
           <button id="signup-btn" class="w-full primary-gradient text-white font-headline font-bold py-4 rounded-full text-lg shadow-lg active:scale-95 transition-transform" type="submit">
-            Join the Beta
+            Get Early Access
           </button>
           <div class="pt-2 flex items-center gap-2 text-slate-500">
-            <span class="material-symbols-outlined text-blue-900" style="font-variation-settings: 'FILL' 1;">eco</span>
-            <span class="text-sm font-medium">Tailored for the Canadian Legal Landscape</span>
+            <span class="material-symbols-outlined text-blue-900" style="font-variation-settings: 'FILL' 1;">campaign</span>
+            <span class="text-sm font-medium">Starting in British Columbia — expanding across Canada</span>
           </div>
 
           <!-- Brevo required fields -->
@@ -107,12 +107,12 @@ import Layout from '../layouts/Layout.astro';
               } else {
                 errorMsg.style.display = 'block';
                 btn.disabled = false;
-                btn.textContent = 'Join the Beta';
+                btn.textContent = 'Get Early Access';
               }
             } catch {
               errorMsg.style.display = 'block';
               btn.disabled = false;
-              btn.textContent = 'Join the Beta';
+              btn.textContent = 'Get Early Access';
             }
           });
         </script>
